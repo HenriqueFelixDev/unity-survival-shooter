@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: ef39ae7291c751249b296f00bf6fb042
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 40756
+  packageName: Survival Shooter Tutorial
+  packageVersion: 2.6
+  assetPath: Assets/Prefabs/HitParticles.prefab
+  uploadId: 283082

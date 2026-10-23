@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a150c3f4779258e44aae96f9e0e11528
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 40756
+  packageName: Survival Shooter Tutorial
+  packageVersion: 2.6
+  assetPath: Assets/SurvivalShooter_Third-PartyNotice.txt
+  uploadId: 283082
