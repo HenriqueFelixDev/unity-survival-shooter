@@ -7,7 +7,7 @@
         "ScriptsAssemblyDefinition"
     ],
     "includePlatforms": [
-        "WebGL"
+        "Editor"
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
