@@ -15,48 +15,35 @@ namespace SurvivalShooter.Characters
     {
         [SerializeField] private PlayerBaseStats baseStats;
 
-        private Health m_health;
-        private CharacterExperience m_experience;
-
+        [Header("Events")]
         public LevelUpEvent OnLevelUp;
         public PlayerStatChangeEvent OnStatChange;
         public UnityEvent<Player> OnDie;
 
+        private readonly StatMediator m_mediator = new();
+
+        private Health m_health;
+        private CharacterExperience m_experience;
+
         private void Awake()
         {
-            m_health = new(baseStats);
-            m_experience = new(baseStats);
+            m_health = new Health(baseStats, m_mediator);
+            m_experience = new CharacterExperience(baseStats);
         }
 
-        private void OnEnable()
-        {
-            m_health.OnChange += Health_OnChange;
-            m_health.OnDie += Health_OnDie;
-            m_experience.OnChange += Experience_OnChange;
-            m_experience.OnLevelUp += Experience_OnLevelUp;
-        }
-
-        private void OnDisable()
-        {
-            m_health.OnChange -= Health_OnChange;
-            m_health.OnDie -= Health_OnDie;
-            m_experience.OnChange -= Experience_OnChange;
-            m_experience.OnLevelUp -= Experience_OnLevelUp;
-        }
-
-        public float Health
+        public Health Health
         {
             get
             {
-                return m_health.CurrentHealth;
+                return m_health;
             }
         }
 
-        public float MaxHealth
+        public CharacterExperience Experience
         {
             get
             {
-                return m_health.MaxHealth;
+                return m_experience;
             }
         }
 
@@ -64,7 +51,10 @@ namespace SurvivalShooter.Characters
         {
             get
             {
-                return baseStats.AttackDamage;
+                Query query = new Query(StatType.AttackDamage, baseStats.AttackDamage);
+                m_mediator.PerformQuery(this, query);
+
+                return query.Value;
             }
         }
 
@@ -72,7 +62,10 @@ namespace SurvivalShooter.Characters
         {
             get
             {
-                return baseStats.AttackSpeed;
+                Query query = new Query(StatType.AttackSpeed, baseStats.AttackSpeed);
+                m_mediator.PerformQuery(this, query);
+
+                return query.Value;
             }
         }
 
@@ -80,7 +73,10 @@ namespace SurvivalShooter.Characters
         {
             get
             {
-                return baseStats.AttackRange;
+                Query query = new Query(StatType.AttackRange, baseStats.AttackRange);
+                m_mediator.PerformQuery(this, query);
+
+                return query.Value;
             }
         }
 
@@ -88,60 +84,11 @@ namespace SurvivalShooter.Characters
         {
             get
             {
-                return baseStats.MovementSpeed;
+                Query query = new Query(StatType.MovementSpeed, baseStats.MovementSpeed);
+                m_mediator.PerformQuery(this, query);
+
+                return query.Value;
             }
-        }
-
-        public float Level
-        {
-            get
-            {
-                return m_experience.Level;
-            }
-        }
-
-        public float Experience
-        {
-            get
-            {
-                return m_experience.Experience;
-            }
-        }
-
-        public float MaxExperienceForCurrentLevel
-        {
-            get
-            {
-                return m_experience.MaxExperienceForCurrentLevel;
-            }
-        }
-
-        public int MaxLevel
-        {
-            get
-            {
-                return m_experience.MaxLevel;
-            }
-        }
-
-        public void Health_OnChange(object sender, EventArgs e)
-        {
-            OnStatChange?.Invoke(this, StatType.Health, Health);
-        }
-
-        public void Health_OnDie(object sender, EventArgs e)
-        {
-            OnDie?.Invoke(this);
-        }
-
-        private void Experience_OnLevelUp(object sender, EventArgs e)
-        {
-            OnStatChange?.Invoke(this, StatType.Level, Level);
-        }
-
-        private void Experience_OnChange(object sender, EventArgs e)
-        {
-            OnStatChange?.Invoke(this, StatType.Experience, Experience);
         }
     }
 }

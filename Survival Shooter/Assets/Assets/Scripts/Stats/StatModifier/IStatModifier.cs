@@ -8,6 +8,8 @@ namespace SurvivalShooter.Stats.StatModifier
 
         int GetPriority();
 
+        public bool CanHandle(object sender, Query query);
+
         public void Handle(object sender, Query query);
 
         public void Update(float deltaTime);

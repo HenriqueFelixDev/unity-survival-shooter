@@ -126,9 +126,9 @@ namespace EditorModeTest.Stats
             mediator.PerformQuery(this, query);
 
             Assert.That(query.Value, Is.EqualTo(7f).Using(floatEqualityComparer));
-            Assert.That(damageModifier.HandleCalls, Is.EqualTo(1));
+            Assert.Zero(damageModifier.HandleCalls);
             Assert.Zero(damageModifier.UpdateCalls);
-            Assert.That(movementSpeedModifier.HandleCalls, Is.EqualTo(1));
+            Assert.Zero(movementSpeedModifier.HandleCalls);
             Assert.Zero(movementSpeedModifier.UpdateCalls);
         }
 
@@ -136,10 +136,10 @@ namespace EditorModeTest.Stats
         public void Update_RemovesMarkedModifiers_UnsubscribesAndDisposesThem()
         {
             StatMediator mediator = new();
-            TestFixedStatModifier first = new(StatType.Health, new AddModifierStrategy(1f));
-            TestFixedStatModifier removedA = new(StatType.Health, new AddModifierStrategy(100f));
-            TestFixedStatModifier removedB = new(StatType.Health, new AddModifierStrategy(200f));
-            TestFixedStatModifier last = new(StatType.Health, new AddModifierStrategy(5f));
+            TestFixedStatModifier first = new(StatType.AttackDamage, new AddModifierStrategy(1f));
+            TestFixedStatModifier removedA = new(StatType.AttackDamage, new AddModifierStrategy(100f));
+            TestFixedStatModifier removedB = new(StatType.AttackDamage, new AddModifierStrategy(200f));
+            TestFixedStatModifier last = new(StatType.AttackDamage, new AddModifierStrategy(5f));
 
             removedA.Remove();
             removedB.Remove();
@@ -160,7 +160,7 @@ namespace EditorModeTest.Stats
             Assert.That(removedA.DisposeCalls, Is.EqualTo(1));
             Assert.That(removedB.DisposeCalls, Is.EqualTo(1));
 
-            Query query = new Query(StatType.Health, 10f);
+            Query query = new Query(StatType.AttackDamage, 10f);
             mediator.PerformQuery(this, query);
             Assert.That(query.Value, Is.EqualTo(16f).Using(floatEqualityComparer));
             Assert.That(first.HandleCalls, Is.EqualTo(1));
@@ -182,7 +182,7 @@ namespace EditorModeTest.Stats
             Assert.That(first.DisposeCalls, Is.EqualTo(1));
             Assert.That(last.DisposeCalls, Is.EqualTo(1));
 
-            query = new Query(StatType.Health, 10f);
+            query = new Query(StatType.AttackDamage, 10f);
             mediator.PerformQuery(this, query);
             Assert.That(query.Value, Is.EqualTo(10f).Using(floatEqualityComparer));
             Assert.That(first.HandleCalls, Is.EqualTo(1));
@@ -195,21 +195,21 @@ namespace EditorModeTest.Stats
             TimerManager timerManager = new();
             StatMediator mediator = new();
             TestTemporaryStatModifier modifier = new(
-                timerManager, 1f, StatType.Health, new AddModifierStrategy(5f));
+                timerManager, 1f, StatType.AttackDamage, new AddModifierStrategy(5f));
             mediator.AddModifier(modifier);
 
             Assert.That(timerManager.TimersCount, Is.EqualTo(1));
-            AssertQueryValue(mediator, StatType.Health, 20f, 25f);
+            AssertQueryValue(mediator, StatType.AttackDamage, 20f, 25f);
 
             mediator.Update(0.5f);
             Assert.IsFalse(modifier.MarkToRemoval);
-            AssertQueryValue(mediator, StatType.Health, 20f, 25f);
+            AssertQueryValue(mediator, StatType.AttackDamage, 20f, 25f);
 
             mediator.Update(0.51f);
             Assert.IsTrue(modifier.MarkToRemoval);
             Assert.Zero(timerManager.TimersCount);
 
-            AssertQueryValue(mediator, StatType.Health, 20f, 20f);
+            AssertQueryValue(mediator, StatType.AttackDamage, 20f, 20f);
         }
 
         private void AssertQueryValue(

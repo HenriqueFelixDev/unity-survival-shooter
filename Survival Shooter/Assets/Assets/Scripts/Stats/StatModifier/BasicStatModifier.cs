@@ -7,7 +7,7 @@ namespace SurvivalShooter.Stats.StatModifier
         public bool MarkToRemoval { get; protected set; }
 
         public readonly StatType StatType;
-        private readonly IModifierStrategy m_strategy;
+        protected readonly IModifierStrategy m_strategy;
 
         protected BasicStatModifier(StatType statType, IModifierStrategy strategy)
         {
@@ -15,12 +15,14 @@ namespace SurvivalShooter.Stats.StatModifier
             m_strategy = strategy;
         }
 
+        public virtual bool CanHandle(object sender, Query query)
+        {
+            return StatType == query.StatType && !MarkToRemoval;
+        }
+
         public virtual void Handle(object sender, Query query)
         {
-            if (StatType == query.StatType && !MarkToRemoval)
-            {
-                query.Value = m_strategy.Execute(query.Value);
-            }
+            query.Value = m_strategy.Execute(query.Value);
         }
 
         public abstract void Update(float deltaTime);
