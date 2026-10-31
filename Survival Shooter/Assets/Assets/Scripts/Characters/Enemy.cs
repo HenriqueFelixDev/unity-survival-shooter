@@ -12,41 +12,22 @@ namespace SurvivalShooter.Characters
     {
         [SerializeField] private EnemyBaseStats baseStats;
         
-        private Health health;
+        private Health m_health;
+        private readonly StatMediator m_mediator = new();
 
         public EnemyStatChangeEvent OnStatChange;
         public UnityEvent<Enemy> OnDie;
 
         private void Awake()
         {
-            health = new(baseStats);
+            m_health = new Health(baseStats, m_mediator);
         }
 
-        private void OnEnable()
-        {
-            health.OnChange += Health_OnHealthChange;
-            health.OnDie += Health_OnDie;
-        }
-
-        private void OnDisable()
-        {
-            health.OnChange -= Health_OnHealthChange;
-            health.OnDie -= Health_OnDie;
-        }
-
-        public float Health
+        public Health Health
         {
             get
             {
-                return health.CurrentHealth;
-            }
-        }
-
-        public float MaxHealth
-        {
-            get
-            {
-                return health.MaxHealth;
+                return m_health;
             }
         }
 
@@ -88,16 +69,6 @@ namespace SurvivalShooter.Characters
             {
                 return baseStats.XpGranted;
             }
-        }
-
-        private void Health_OnHealthChange(object sender, EventArgs e)
-        {
-            OnStatChange?.Invoke(this, StatType.Health, Health);
-        }
-
-        private void Health_OnDie(object sender, EventArgs e)
-        {
-            OnDie?.Invoke(this);
         }
     }
 }

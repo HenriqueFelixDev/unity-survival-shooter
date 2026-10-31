@@ -1,4 +1,5 @@
 using SurvivalShooter.Stats.StatModifier;
+using System;
 using System.Collections.Generic;
 
 namespace SurvivalShooter.Stats
@@ -8,11 +9,14 @@ namespace SurvivalShooter.Stats
         private readonly LinkedList<IStatModifier> m_modifiers = new();
         private readonly Dictionary<int, LinkedListNode<IStatModifier>> m_lastNodeByPriority = new();
 
+        public event Action<IStatModifier> OnChange;
+
         public void AddModifier(IStatModifier modifier)
         {
             LinkedListNode<IStatModifier> addedNode = InsertNodeInOrder(modifier);
 
             m_lastNodeByPriority[modifier.GetPriority()] = addedNode;
+            OnChange?.Invoke(addedNode.Value);
         }
 
         private void RemoveNode(LinkedListNode<IStatModifier> node)
@@ -23,13 +27,15 @@ namespace SurvivalShooter.Stats
             m_modifiers.Remove(node);
 
             node.Value.Dispose();
+            OnChange?.Invoke(node.Value);
         }
 
         public void PerformQuery(object sender, Query query)
         {
             for (var node = m_modifiers.First; node != null; node = node.Next)
             {
-                node.Value.Handle(sender, query);
+                if (node.Value.CanHandle(sender, query))
+                    node.Value.Handle(sender, query);
             }
         }
 
