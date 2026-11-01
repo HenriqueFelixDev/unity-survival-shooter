@@ -56,6 +56,8 @@ namespace SurvivalShooter
             }
         }
 
+        public bool IsDead() => CurrentHealth <= 0;
+
         public void ApplyDamage(float damage)
         {
             if (damage < 0)
@@ -85,7 +87,7 @@ namespace SurvivalShooter
 
             OnChange?.Invoke(this, EventArgs.Empty);
 
-            if (CurrentHealth <= 0)
+            if (IsDead())
             {
                 OnDie?.Invoke(this, EventArgs.Empty);
             }
