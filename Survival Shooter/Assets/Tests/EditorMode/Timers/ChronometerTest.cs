@@ -2,7 +2,7 @@ using NUnit.Framework;
 using SurvivalShooter.Core.Timers;
 using UnityEngine.TestTools.Utils;
 
-namespace EditorModeTest.Timers
+namespace EditorModeTests.Timers
 {
     public class TimersTest
     {

@@ -1,13 +1,13 @@
 {
-    "name": "PlayMode",
-    "rootNamespace": "PlayModeTest",
+    "name": "EditorModeTests",
+    "rootNamespace": "EditorModeTests",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "ScriptsAssemblyDefinition"
     ],
     "includePlatforms": [
-        "WebGL"
+        "Editor"
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

@@ -11,7 +11,7 @@ namespace SurvivalShooter.Characters
     [Serializable]
     public class LevelUpEvent : UnityEvent<Player, int> { }
 
-    public class Player : MonoBehaviour
+    public class Player : MonoBehaviour, IVisitable
     {
         [SerializeField] private PlayerBaseStats baseStats;
 
@@ -30,6 +30,18 @@ namespace SurvivalShooter.Characters
             m_health = new Health(baseStats, m_mediator);
             m_experience = new CharacterExperience(baseStats);
         }
+
+        internal void Initialize(PlayerBaseStats stats)
+        {
+            baseStats = stats;
+        }
+
+        public void Accept(IVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+
+        public StatMediator Mediator => m_mediator;
 
         public Health Health
         {

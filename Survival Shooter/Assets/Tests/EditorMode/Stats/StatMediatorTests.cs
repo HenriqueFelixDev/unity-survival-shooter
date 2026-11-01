@@ -5,7 +5,7 @@ using UnityEngine.TestTools.Utils;
 using SurvivalShooter.Stats.ModifierStrategy;
 using SurvivalShooter.Stats.StatModifier;
 
-namespace EditorModeTest.Stats
+namespace EditorModeTests.Stats
 {
     public class StatMediatorTests
     {

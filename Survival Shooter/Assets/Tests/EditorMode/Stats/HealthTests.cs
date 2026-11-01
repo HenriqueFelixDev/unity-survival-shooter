@@ -7,7 +7,7 @@ using SurvivalShooter.Stats.StatModifier;
 using UnityEngine;
 using UnityEngine.TestTools.Utils;
 
-namespace EditorModeTest.Stats
+namespace EditorModeTests.Stats
 {
     public class HealthTests
     {
