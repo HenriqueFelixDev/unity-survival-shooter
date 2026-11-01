@@ -1,22 +1,14 @@
 using SurvivalShooter.Stats;
-using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace SurvivalShooter.Characters
 {
-    [Serializable]
-    public class EnemyStatChangeEvent : UnityEvent<Enemy, StatType, float> { }
-
     public class Enemy : MonoBehaviour
     {
         [SerializeField] private EnemyBaseStats baseStats;
         
         private Health m_health;
         private readonly StatMediator m_mediator = new();
-
-        public EnemyStatChangeEvent OnStatChange;
-        public UnityEvent<Enemy> OnDie;
 
         private void Awake()
         {
@@ -68,6 +60,22 @@ namespace SurvivalShooter.Characters
             get
             {
                 return baseStats.XpGranted;
+            }
+        }
+
+        public void ApplyDamage(Player player)
+        {
+            player.TakeDamage(this);
+        }
+
+        public void TakeDamage(Player player)
+        {
+            float damage = player.AttackDamage;
+            m_health.ApplyDamage(damage);
+
+            if (m_health.IsDead())
+            {
+                player.Experience.IncrementExperience(ExperienceGranted);
             }
         }
     }

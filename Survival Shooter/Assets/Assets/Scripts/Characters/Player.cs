@@ -1,24 +1,11 @@
 using SurvivalShooter.Stats;
-using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace SurvivalShooter.Characters
 {
-    [Serializable]
-    public class PlayerStatChangeEvent : UnityEvent<Player, StatType, float> { }
-
-    [Serializable]
-    public class LevelUpEvent : UnityEvent<Player, int> { }
-
     public class Player : MonoBehaviour, IVisitable
     {
         [SerializeField] private PlayerBaseStats baseStats;
-
-        [Header("Events")]
-        public LevelUpEvent OnLevelUp;
-        public PlayerStatChangeEvent OnStatChange;
-        public UnityEvent<Player> OnDie;
 
         private readonly StatMediator m_mediator = new();
 
@@ -101,6 +88,16 @@ namespace SurvivalShooter.Characters
 
                 return query.Value;
             }
+        }
+
+        public void ApplyDamage(Enemy enemy)
+        {
+            enemy.TakeDamage(this);
+        }
+
+        public void TakeDamage(Enemy enemy)
+        {
+            m_health.ApplyDamage(enemy.AttackDamage);
         }
     }
 }
