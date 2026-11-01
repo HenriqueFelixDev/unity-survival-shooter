@@ -3,7 +3,7 @@ using SurvivalShooter;
 using SurvivalShooter.Stats;
 using UnityEngine;
 
-namespace EditorModeTest.Stats
+namespace EditorModeTests.Stats
 {
     public class PlayerExperienceTests
     {

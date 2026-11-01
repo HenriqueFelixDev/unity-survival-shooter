@@ -66,7 +66,8 @@
   <Project Path="Unity.VisualScripting.Shared.Editor.csproj" />
   <Project Path="Unity.AppUI.Redux.Editor.csproj" />
   <Project Path="Unity.AppUI.Undo.csproj" />
-  <Project Path="EditorMode.csproj" />
+  <Project Path="EditorModeTests.csproj" />
+  <Project Path="PlayModeTests.csproj" />
   <Project Path="Unity.Pipeline.Attributes.csproj" />
   <Project Path="Unity.CollabProxy.Editor.csproj" />
   <Project Path="Unity.RenderPipeline.Universal.ShaderLibrary.csproj" />

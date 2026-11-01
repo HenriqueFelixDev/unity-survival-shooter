@@ -3,11 +3,11 @@ using SurvivalShooter.Stats.ModifierStrategy;
 
 namespace SurvivalShooter.Stats.StatModifier
 {
-    public abstract class TemporaryStatModifier : BasicStatModifier
+    public class TemporaryStatModifier : BasicStatModifier
     {
         private readonly Timer m_timer;
 
-        protected TemporaryStatModifier(
+        public TemporaryStatModifier(
             TimerManager timerManager,
             float duration,
             StatType statType,
