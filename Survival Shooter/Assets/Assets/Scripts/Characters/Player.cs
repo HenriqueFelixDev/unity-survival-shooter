@@ -3,18 +3,17 @@ using UnityEngine;
 
 namespace SurvivalShooter.Characters
 {
-    public class Player : MonoBehaviour, IVisitable
+    public class Player : Character, IVisitable
     {
         [SerializeField] private PlayerBaseStats baseStats;
 
         private readonly StatMediator m_mediator = new();
 
-        private Health m_health;
         private CharacterExperience m_experience;
 
         private void Awake()
         {
-            m_health = new Health(baseStats, m_mediator);
+            Initialize(baseStats);
             m_experience = new CharacterExperience(baseStats);
         }
 
@@ -26,16 +25,6 @@ namespace SurvivalShooter.Characters
         public void Accept(IVisitor visitor)
         {
             visitor.Visit(this);
-        }
-
-        public StatMediator Mediator => m_mediator;
-
-        public Health Health
-        {
-            get
-            {
-                return m_health;
-            }
         }
 
         public CharacterExperience Experience
@@ -97,7 +86,7 @@ namespace SurvivalShooter.Characters
 
         public void TakeDamage(Enemy enemy)
         {
-            m_health.ApplyDamage(enemy.AttackDamage);
+            Health.ApplyDamage(enemy.AttackDamage);
         }
     }
 }

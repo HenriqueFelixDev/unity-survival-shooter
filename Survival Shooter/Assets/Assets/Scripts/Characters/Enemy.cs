@@ -3,24 +3,13 @@ using UnityEngine;
 
 namespace SurvivalShooter.Characters
 {
-    public class Enemy : MonoBehaviour
+    public class Enemy : Character
     {
         [SerializeField] private EnemyBaseStats baseStats;
-        
-        private Health m_health;
-        private readonly StatMediator m_mediator = new();
 
         private void Awake()
         {
-            m_health = new Health(baseStats, m_mediator);
-        }
-
-        public Health Health
-        {
-            get
-            {
-                return m_health;
-            }
+            Initialize(baseStats);
         }
 
         public float AttackDamage
@@ -71,9 +60,9 @@ namespace SurvivalShooter.Characters
         public void TakeDamage(Player player)
         {
             float damage = player.AttackDamage;
-            m_health.ApplyDamage(damage);
+            Health.ApplyDamage(damage);
 
-            if (m_health.IsDead())
+            if (Health.IsDead())
             {
                 player.Experience.IncrementExperience(ExperienceGranted);
             }
