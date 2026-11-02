@@ -148,7 +148,7 @@ namespace EditorModeTests.Skills
         }
 
         [Test]
-        public void DestroyingOwner_DuringExecution_CancelsEffectsAndSkillUpdates()
+        public void Dispose_DuringExecution_CancelsEffectsAndStopsSkillUpdates()
         {
             TestSkill skill = CreateSkill(2f);
             int cancelEvents = 0;
@@ -162,13 +162,11 @@ namespace EditorModeTests.Skills
             int updatesBeforeDestroy = skill.UpdateCount;
             Assert.That(skill.HasEffect, Is.True);
 
-            SkillTestOwner owner = new SkillTestOwner();
-            owner.Own(skill);
-            owner.Destroy();
+            skill.Dispose();
             skill.Update(1f);
 
             Assert.That(cancelEvents, Is.EqualTo(1));
-            Assert.That(owner.OwnsSkill, Is.False);
+            Assert.That(skill.IsDisposed, Is.True);
             Assert.That(skill.HasEffect, Is.False);
             Assert.That(skill.UpdateCount, Is.EqualTo(updatesBeforeDestroy));
             Assert.That(skill.Cooldown.IsRunning, Is.False);
@@ -225,6 +223,7 @@ namespace EditorModeTests.Skills
             public int UpdateCount { get; private set; }
             public int EffectApplications { get; private set; }
             public bool HasEffect { get; private set; }
+            public override SkillType SkillType => SurvivalShooter.SkillType.Dash;
             private bool m_completedUpdate;
 
             public TestSkill(TimerManager timerManager, float cooldownTime)
@@ -249,6 +248,10 @@ namespace EditorModeTests.Skills
                 HasEffect = true;
                 m_completedUpdate = CompleteOnNextUpdate;
                 CompleteOnNextUpdate = false;
+            }
+
+            public override void ResolveConflict(Skill other)
+            {
             }
 
             public void RemoveEffect()

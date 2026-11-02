@@ -7,7 +7,10 @@ namespace SurvivalShooter
     {
         private readonly Timer m_cooldownTimer;
 
+        protected SkillManager m_skillManager;
+
         private bool m_isSkillExecuting;
+        private bool m_isDisposed;
 
         public event Action OnStart = delegate { };
         public event Action OnComplete = delegate { };
@@ -20,14 +23,26 @@ namespace SurvivalShooter
 
         public Timer Cooldown => m_cooldownTimer;
 
-        public virtual bool CanExecute()
+        public bool IsExecuting => m_isSkillExecuting;
+
+        public bool IsDisposed => m_isDisposed;
+
+        public void SetSkillManager(SkillManager skillManager)
         {
-            return !(m_isSkillExecuting || m_cooldownTimer.IsRunning);
+            m_skillManager = skillManager;
         }
 
+        public virtual bool CanExecute()
+        {
+            return !(m_isDisposed || m_isSkillExecuting || m_cooldownTimer.IsRunning);
+        }
+
+        public abstract SkillType SkillType { get; }
         protected abstract bool IsCompleted();
 
         protected abstract void HandleUpdate(float deltaTime);
+
+        public abstract void ResolveConflict(Skill other);
 
         public void Execute()
         {
@@ -50,6 +65,9 @@ namespace SurvivalShooter
 
         public void Cancel()
         {
+            if (!m_isSkillExecuting && !m_cooldownTimer.IsRunning)
+                return;
+
             m_isSkillExecuting = false;
             m_cooldownTimer.Stop();
             OnCancel?.Invoke();
@@ -57,6 +75,9 @@ namespace SurvivalShooter
 
         public virtual void Update(float deltaTime)
         {
+            if (m_isDisposed)
+                return;
+
             if (m_cooldownTimer.IsRunning)
             {
                 m_cooldownTimer.Tick(deltaTime);
@@ -73,6 +94,11 @@ namespace SurvivalShooter
 
         public void Dispose()
         {
+            if (m_isDisposed)
+                return;
+
+            m_isDisposed = true;
+            Cancel();
             m_cooldownTimer.Dispose();
         }
     }
