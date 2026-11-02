@@ -7,8 +7,6 @@ namespace SurvivalShooter.Characters
     {
         [SerializeField] private PlayerBaseStats baseStats;
 
-        private readonly StatMediator m_mediator = new();
-
         private CharacterExperience m_experience;
 
         private void Awake()
@@ -40,7 +38,7 @@ namespace SurvivalShooter.Characters
             get
             {
                 Query query = new Query(StatType.AttackDamage, baseStats.AttackDamage);
-                m_mediator.PerformQuery(this, query);
+                Mediator.PerformQuery(this, query);
 
                 return query.Value;
             }
@@ -51,7 +49,7 @@ namespace SurvivalShooter.Characters
             get
             {
                 Query query = new Query(StatType.AttackSpeed, baseStats.AttackSpeed);
-                m_mediator.PerformQuery(this, query);
+                Mediator.PerformQuery(this, query);
 
                 return query.Value;
             }
@@ -62,7 +60,7 @@ namespace SurvivalShooter.Characters
             get
             {
                 Query query = new Query(StatType.AttackRange, baseStats.AttackRange);
-                m_mediator.PerformQuery(this, query);
+                Mediator.PerformQuery(this, query);
 
                 return query.Value;
             }
@@ -73,7 +71,7 @@ namespace SurvivalShooter.Characters
             get
             {
                 Query query = new Query(StatType.MovementSpeed, baseStats.MovementSpeed);
-                m_mediator.PerformQuery(this, query);
+                Mediator.PerformQuery(this, query);
 
                 return query.Value;
             }
