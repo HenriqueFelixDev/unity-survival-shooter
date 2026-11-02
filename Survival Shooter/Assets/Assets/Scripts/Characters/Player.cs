@@ -1,3 +1,4 @@
+using SurvivalShooter.Core.Timers;
 using SurvivalShooter.Stats;
 using UnityEngine;
 
@@ -6,6 +7,8 @@ namespace SurvivalShooter.Characters
     public class Player : Character, IVisitable
     {
         [SerializeField] private PlayerBaseStats baseStats;
+        [SerializeField] private Transform aim;
+        [SerializeField] private LayerMask shootTargetLayer;
 
         private CharacterExperience m_experience;
 
@@ -13,11 +16,14 @@ namespace SurvivalShooter.Characters
         {
             Initialize(baseStats);
             m_experience = new CharacterExperience(baseStats);
-        }
 
-        internal void Initialize(PlayerBaseStats stats)
-        {
-            baseStats = stats;
+            SkillManager.Initialize(Health);
+
+            SkillManager.AddSkill(new ShootSkill(
+                aim,
+                shootTargetLayer,
+                this,
+                TimerManagerComponent.Instance.TimerManager));
         }
 
         public void Accept(IVisitor visitor)
@@ -33,58 +39,30 @@ namespace SurvivalShooter.Characters
             }
         }
 
-        public float AttackDamage
+        protected override void TakeDamage(Character character)
         {
-            get
+            if (character is Enemy enemy)
             {
-                Query query = new Query(StatType.AttackDamage, baseStats.AttackDamage);
-                Mediator.PerformQuery(this, query);
-
-                return query.Value;
+                Health.ApplyDamage(enemy.AttackDamage);
             }
         }
 
-        public float AttackSpeed
+        public void UseSkill()
         {
-            get
+            SkillManager.Activate(SkillType.Shoot);
+        }
+
+        private void Update()
+        {
+            SkillManager.Update(Time.deltaTime);
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (SkillManager.TryGetSkill(SkillType.Shoot, out ShootSkill shootSkill))
             {
-                Query query = new Query(StatType.AttackSpeed, baseStats.AttackSpeed);
-                Mediator.PerformQuery(this, query);
-
-                return query.Value;
+                shootSkill.DebugDrawRay();
             }
-        }
-
-        public float AttackRange
-        {
-            get
-            {
-                Query query = new Query(StatType.AttackRange, baseStats.AttackRange);
-                Mediator.PerformQuery(this, query);
-
-                return query.Value;
-            }
-        }
-
-        public float MovementSpeed
-        {
-            get
-            {
-                Query query = new Query(StatType.MovementSpeed, baseStats.MovementSpeed);
-                Mediator.PerformQuery(this, query);
-
-                return query.Value;
-            }
-        }
-
-        public void ApplyDamage(Enemy enemy)
-        {
-            enemy.TakeDamage(this);
-        }
-
-        public void TakeDamage(Enemy enemy)
-        {
-            Health.ApplyDamage(enemy.AttackDamage);
         }
     }
 }

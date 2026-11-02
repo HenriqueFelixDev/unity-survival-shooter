@@ -10,38 +10,7 @@ namespace SurvivalShooter.Characters
         private void Awake()
         {
             Initialize(baseStats);
-        }
-
-        public float AttackDamage
-        {
-            get
-            {
-                return baseStats.AttackDamage;
-            }
-        }
-
-        public float AttackSpeed
-        {
-            get
-            {
-                return baseStats.AttackSpeed;
-            }
-        }
-
-        public float AttackRange
-        {
-            get
-            {
-                return baseStats.AttackRange;
-            }
-        }
-
-        public float MovementSpeed
-        {
-            get
-            {
-                return baseStats.MovementSpeed;
-            }
+            Health.OnDie += (sender, e) => Destroy(gameObject);
         }
 
         public float ExperienceGranted
@@ -52,18 +21,15 @@ namespace SurvivalShooter.Characters
             }
         }
 
-        public void ApplyDamage(Player player)
+        protected override void TakeDamage(Character character)
         {
-            player.TakeDamage(this);
-        }
-
-        public void TakeDamage(Player player)
-        {
-            if (Health.IsDead())
+            if (character is not Player player || Health.IsDead())
                 return;
 
             float damage = player.AttackDamage;
             Health.ApplyDamage(damage);
+
+            Debug.Log($"[Enemy({name})] Health after damage: {Health.CurrentHealth}");
 
             if (Health.IsDead())
             {
