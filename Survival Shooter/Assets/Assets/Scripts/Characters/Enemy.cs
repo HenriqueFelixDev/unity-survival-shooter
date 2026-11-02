@@ -59,6 +59,9 @@ namespace SurvivalShooter.Characters
 
         public void TakeDamage(Player player)
         {
+            if (Health.IsDead())
+                return;
+
             float damage = player.AttackDamage;
             Health.ApplyDamage(damage);
 
