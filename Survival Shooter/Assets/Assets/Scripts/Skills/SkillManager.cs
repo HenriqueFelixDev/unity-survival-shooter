@@ -91,9 +91,16 @@ namespace SurvivalShooter
             return skill;
         }
 
-        public bool TryGetSkill(SkillType skillType, out Skill skill)
+        public bool TryGetSkill<T>(SkillType skillType, out T skill) where T : Skill
         {
-            return m_skillsDictionary.TryGetValue(skillType, out skill);
+            if (m_skillsDictionary.TryGetValue(skillType, out Skill foundSkill))
+            {
+                skill = foundSkill as T;
+                return skill != null;
+            }
+
+            skill = null;
+            return false;
         }
 
         private void SubscribeToOwnerHealth()

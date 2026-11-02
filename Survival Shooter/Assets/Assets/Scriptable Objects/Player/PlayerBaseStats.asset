@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: ScriptsAssemblyDefinition::SurvivalShooter.Stats.PlayerBaseStats
   MaxHealth: 100
   AttackDamage: 25
-  AttackSpeed: 100
+  AttackSpeed: 1
   AttackRange: 2
   MovementSpeed: 1
   XpLevels:
