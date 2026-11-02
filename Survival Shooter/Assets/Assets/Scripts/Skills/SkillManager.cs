@@ -68,6 +68,7 @@ namespace SurvivalShooter
             }
 
             m_skillsDictionary.Add(skill.SkillType, skill);
+            skill.SetSkillManager(this);
         }
 
         public bool RemoveSkill(SkillType skillType)
